@@ -1,0 +1,88 @@
+﻿@model WarehouseViewModel
+
+<form method="post" asp-action="SaveInvoice" enctype="multipart/form-data">
+    <div class="card">
+        <div class="content">
+            @if (TempData["Error"] != null)
+            {
+                <div class="col-md-12 alert alert-danger">
+                    <span><b>Помилка!</b> - @TempData["Error"] </span>
+                </div>
+            }
+            <div class="row">
+                <div>
+                    <div class="col-md-2">
+                        <div class="form-group">
+                            <label>Фільтр по категорії</label>
+                            @{
+                                await Html.RenderPartialAsync("_CategoryDropDownList", Model.CategoryMenu);
+                            }
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+            <div class="container-fluid">
+                <div class="row">
+                    <div>
+
+                        <div class="card">
+                            <div class="content">
+
+                                @if (Model.Warehouse == null)
+                                {
+                                    <div class="text-center">
+                                        <div class="card-body">
+                                            <h4 class="card-title">Продукція відсутня</h4>
+                                        </div>
+                                    </div>
+                                }
+                                else
+                                {
+                                    <div class="content table-responsive table-full-width">
+                                        <table class="table table-striped  text-left">
+                                            <thead>
+                                                <tr>
+                                                    <th>Категорія</th>
+                                                    <th>Фірма</th>
+                                                    <th>Найменування</th>
+                                                    <th>Опис</th>
+                                                    <th>Код</th>
+                                                    <th>Кількість</th>
+                                                    <th>Од.Вим.</th>
+                                                    <th>Ціна</th>
+                                                    <th>Валюта</th>
+                                                    <th>Сума</th>
+                                                    <th>Мін.Залишок</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+
+                                                @foreach (var item in Model.Warehouse)
+                                                {
+                                                    <tr>
+                                                        <td>@item.Product.Category.Name</td>
+                                                        <td>@item.Product.Manufacturer.Name</td>
+                                                        <td>@item.Product.Name</td>
+                                                        <td>@item.Product.Description</td>
+                                                        <td>@item.Product.Barcode</td>
+                                                        <td>@item.Amount</td>
+                                                        <td>@item.Product.Unit.Name</td>
+                                                        <td>@item.Product.Price</td>
+                                                        <td>@item.InvoiceDetail.Invoice.Currency.ShortName</td>
+                                                        <td>@(item.Amount * item.Product.Price)</td>
+                                                        <td>@item.Product.MinimunStock</td>
+                                                    </tr>
+                                                }
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>

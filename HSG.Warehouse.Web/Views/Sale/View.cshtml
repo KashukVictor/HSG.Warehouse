@@ -1,0 +1,123 @@
+﻿@model SaleViewViewModel
+
+<form method="post" asp-action="Save" enctype="multipart/form-data">
+    <input type="hidden" asp-for="Sale.Id" />
+    <div class="card">
+        <div class="content">
+            @if (TempData["Error"] != null)
+            {
+                <div class="col-md-12 alert alert-danger">
+                    <span><b>Помилка!</b> - @TempData["Error"] </span>
+                </div>
+            }
+            @if (Model.Sale != null)
+            {
+                <div class="row">
+                    <div>
+                        <div class="col-md-2">
+                            <div class="form-group">
+                                <label>&nbsp;</label>
+                                <br />
+                                <div class="text-center">
+                                    @if (!Model.Sale.Fixed)
+                                    {
+                                        <button type="submit" class="btn btn-info btn-fill btn-wd" onclick="javascript:return confirm('Увага, після фіксації накладної, її редагкування буде не доступне!');">Фіксувати накладу</button>
+                                    }
+                                    <button asp-action="Excel" class="btn btn-info btn-fill btn-wd">Сформувати Excel</button>
+                                </div>
+                                <div class="clearfix"></div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-2">
+                            <div class="form-group">
+                                <label>Накладна</label>
+                                <br />
+                                <div>
+                                    № @Model.Sale.Number від @Model.Sale.Date.ToString("d")
+                                </div>
+                                <div class="clearfix"></div>
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <div class="form-group">
+                                <label>Постачальник</label>
+                                <br />
+                                <div>
+                                    @Model.Sale.Client.LastName @Model.Sale.Client.FirstName
+                                </div>
+                                <div class="clearfix"></div>
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <div class="form-group">
+                                <label>Сума</label>
+                                <br />
+                                <div>
+                                    <span id="SaleSum">@Model.Sum</span> @Model.Sale.Currency.ShortName
+                                </div>
+                                <div class="clearfix"></div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+                <div class="container-fluid">
+                    <div class="row">
+                        <div>
+
+                            <div class="card">
+                                <div class="content">
+
+                                    @if (Model.SaleDetail == null)
+                                    {
+                                        <div class="text-center">
+                                            <div class="card-body">
+                                                <h4 class="card-title">Продукція відсутня</h4>
+                                            </div>
+                                        </div>
+                                    }
+                                    else
+                                    {
+                                        <div class="content table-responsive table-full-width">
+                                            <table class="table table-striped  text-left">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Фірма</th>
+                                                        <th>Найменування</th>
+                                                        <th>Опис</th>
+                                                        <th>Код</th>
+                                                        <th>Кількість</th>
+                                                        <th>Од.Вим.</th>
+                                                        <th>Ціна</th>
+                                                        <th>Сума</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    @foreach (var item in Model.SaleDetail)
+                                                    {
+                                                        <tr>
+                                                            <td>@item.Product.Manufacturer.Name</td>
+                                                            <td>@item.Product.Name</td>
+                                                            <td>@item.Product.Description</td>
+                                                            <td>@item.Product.Barcode</td>
+                                                            <td>@item.Amount</td>
+                                                            <td>@item.Product.Unit.Name</td>
+                                                            <td>@item.Price</td>
+                                                            <td> @(item.Amount * item.Price)</td>
+                                                        </tr>
+                                                    }
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</form>
+

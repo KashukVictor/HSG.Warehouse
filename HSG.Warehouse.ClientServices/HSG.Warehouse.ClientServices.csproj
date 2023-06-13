@@ -1,0 +1,14 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\HSG.Warehouse.Common\HSG.Warehouse.Common.csproj" />
+    <ProjectReference Include="..\HSG.Warehouse.Interfaces\HSG.Warehouse.Interfaces.csproj" />
+    <ProjectReference Include="..\HSG.Warehouse.Repository\HSG.Warehouse.Repository.csproj" />
+  </ItemGroup>
+
+</Project>

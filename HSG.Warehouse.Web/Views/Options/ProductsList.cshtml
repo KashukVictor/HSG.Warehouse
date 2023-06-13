@@ -1,0 +1,93 @@
+﻿@model ProductsListViewModel
+
+<div class="card">
+    <div class="content">
+        @if (TempData["Error"] != null)
+        {
+            <div class="col-md-12 alert alert-danger">
+                <span><b>Помилка!</b> - @TempData["Error"] </span>
+            </div>
+        }
+        <div class="row">
+            <div>
+                <div class="col-md-2">
+                    <div class="form-group">
+                        <label>Фільтр по категорії</label>
+                        @{
+                            await Html.RenderPartialAsync("_CategoryDropDownList", Model.CategoryMenu);
+                        }
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <div class="form-group">
+                        <label>&nbsp;</label>
+                        <br />                        
+                        <a class="btn btn-info btn-fill btn-wd" asp-controller="Options" asp-action="Product">
+                            Створити новий товар
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="container-fluid">
+            <div class="row">               
+                <div>
+                    <div class="card">
+                        <div class="content">
+
+                            @if (Model.Products == null)
+                            {
+                                <div class="text-center">
+                                    <div class="card-body">
+                                        <h4 class="card-title">Продукція відсутня</h4>
+                                    </div>
+                                </div>
+                            }
+                            else
+                            {
+                                <div class="content table-responsive table-full-width">
+                                    <table class="table table-striped  text-left">
+                                        <thead>
+                                            <tr>
+                                                <th>Категорія</th>
+                                                <th>Фірма</th>
+                                                <th>Найменування</th>
+                                                <th>Опис</th>
+                                                <th>Код</th>
+                                                <th>Ціна</th>
+                                                <th>Од.Вим.</th>
+                                                <th></th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @foreach (var item in Model.Products)
+                                            {
+                                                <tr>
+                                                    <td>@item.Category.Name</td>
+                                                    <td>@item.Manufacturer.Name</td>
+                                                    <td>@item.Name</td>
+                                                    <td>@item.Description</td>
+                                                    <td>@item.Barcode</td>
+                                                    <td>@item.Price</td>
+                                                    <td>@item.Unit.Name</td>
+                                                    <td>
+                                                        <a class="btn btn-sm btn-warning" asp-controller="Options" asp-action="Product" asp-route-productId="@item.Id">
+                                                            <i class="ti-pencil"></i>
+                                                        </a>
+                                                        <a class="btn btn-sm btn-danger" asp-controller="Options" asp-action="DeleteProduct" asp-route-productId="@item.Id" onclick="javascript:return confirm('Видалити?');">
+                                                            <i class="ti-trash"></i>
+                                                        </a>
+                                                    </td>
+                                                </tr>
+                                            }
+                                        </tbody>
+                                    </table>
+                                </div>
+                            }                            
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

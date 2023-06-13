@@ -1,0 +1,93 @@
+﻿@model InvoiceViewModel
+
+<div class="col text-center">
+    <div class="card">
+        <div class="content">
+            @if (TempData["Error"] != null)
+            {
+                <div class="col-md-12 alert alert-danger">
+                    <span><b>Помилка!</b> - @TempData["Error"] </span>
+                </div>
+            }
+
+            @if (Model.Invoice == null || Model.Invoice.Id == 0)
+            {
+                @*Додати новий*@
+                <form method="post" asp-action="Create" enctype="multipart/form-data">
+                    <div class="col-md-12">
+                        <div class="header">
+                            <h4 class="title">Приход товару</h4>
+                        </div>
+                        <div class="content">
+                            <div class="row">
+                                <div class="col-md-1">
+                                    <div class="form-group">
+                                        <label>Номер</label>
+                                        <input type="text" asp-for="Invoice.Number" class="form-control border-input" placeholder="1">
+                                        <span asp-validation-for="Invoice.Number" class="text-danger"></span>
+                                    </div>
+                                </div>
+                                <div class="col-md-1">
+                                    <div class="form-group">
+                                        <label>Дата</label>
+                                        <input type="date" asp-for="Invoice.Date" class="form-control border-input">
+                                        <span asp-validation-for="Invoice.Date" class="text-danger"></span>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label>Постачальник</label>
+                                        <select id="SelectClientId" asp-for="Invoice.ClientId" class="form-control border-input">
+                                            @foreach (var client in Model.Clients)
+                                            {
+                                                <option value=@client.Id>@client.LastName @client.FirstName @client.MiddleName</option>
+                                            }
+                                        </select>
+                                        <span asp-validation-for="Invoice.ClientId" class="text-danger"></span>
+                                    </div>
+                                </div>
+                                <div class="col-md-1">
+                                    <div class="form-group">
+                                        <label>Валюта</label>
+                                        <select id="SelectCurrencyId" asp-for="Invoice.CurrencyId" class="form-control border-input">
+                                            @foreach (var currency in Model.Currencys)
+                                            {
+                                                <option value=@currency.Id>@currency.Name</option>
+                                            }
+                                        </select>
+                                        <span asp-validation-for="Invoice.CurrencyId" class="text-danger"></span>
+                                    </div>
+                                </div>
+                                <div class="col-md-1">
+                                    <div class="form-group">
+                                        <label>Курс</label>
+                                        <input type="text" asp-for="Invoice.CurrencyRate" class="form-control border-input" placeholder="1">
+                                        <span asp-validation-for="Invoice.CurrencyRate" class="text-danger"></span>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label>Додатковий опис</label>
+                                        <input type="text" asp-for="Invoice.Description" class="form-control border-input" placeholder="Детальний опис">
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    <div class="text-center">
+                        <button type="submit" class="btn btn-info btn-fill btn-wd">Створити</button>
+                    </div>
+                    <div class="clearfix"></div>
+                </form>
+            }
+            else
+            {
+                @*Редагування*@
+            }
+        </div>
+    </div>
+</div>

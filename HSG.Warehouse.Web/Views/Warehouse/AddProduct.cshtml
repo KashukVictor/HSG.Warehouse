@@ -1,0 +1,225 @@
+﻿@model ProductToInvoiceViewModel
+
+<form method="post" asp-action="SaveInvoice" enctype="multipart/form-data">    
+    <input type="hidden" asp-for="Invoice.Id" />
+    <div class="card">
+        @*Хлібні крошки*@
+        @*    <div>
+        @{
+        await Html.RenderPartialAsync("_NavMenu", Model.seededCategories);
+        }
+        </div>*@
+
+        <div class="content">
+            @if (TempData["Error"] != null)
+            {
+                <div class="col-md-12 alert alert-danger">
+                    <span><b>Помилка!</b> - @TempData["Error"] </span>
+                </div>
+            }
+            <div class="row">
+                <div>
+                    <div class="col-md-2">
+                        <div class="form-group">
+                            <label>Фільтр по категорії</label>
+                            @{
+                                await Html.RenderPartialAsync("_CategoryDropDownList", Model.CategoryMenu);
+                            }
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="form-group">
+                            <label>&nbsp;</label>
+                            <br />
+                            <div class="text-center">
+                                <button type="submit" class="btn btn-info btn-fill btn-wd" onclick="javascript:return confirm('Увага, після фіксації накладної, її редагкування буде не доступне!');">Фіксувати накладу</button>
+                            </div>
+                            <div class="clearfix"></div>
+                            @*                        <a class="btn btn-info btn-fill btn-wd" asp-controller="Options" asp-action="Product">
+                            Створити новий товар
+                            </a>
+                            *@
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="form-group">
+                            <label>Накладна</label>
+                            <br />
+                            <div>
+                                № @Model.Invoice.Number від @Model.Invoice.Date.ToString("d")
+                            </div>
+                            <div class="clearfix"></div>
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="form-group">
+                            <label>Постачальник</label>
+                            <br />
+                            <div>
+                                @Model.Invoice.Client.LastName @Model.Invoice.Client.FirstName
+                            </div>
+                            <div class="clearfix"></div>
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="form-group">
+                            <label>Сума</label>
+                            <br />
+                            <div>
+                                <span id="invoiceSum">@Model.Sum</span> @Model.Invoice.Currency.ShortName
+                            </div>
+                            <div class="clearfix"></div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+            <div class="container-fluid">
+                <div class="row">
+                    <div>
+
+                        <div class="card">
+                            <div class="content">
+
+                                @if (Model.ProductToInvoices == null)
+                                {
+                                    <div class="text-center">
+                                        <div class="card-body">
+                                            <h4 class="card-title">Продукція відсутня</h4>
+                                        </div>
+                                    </div>
+                                }
+                                else
+                                {
+
+
+                                    <div class="content table-responsive table-full-width">
+                                        <table class="table table-striped  text-left">
+                                            <thead>
+                                                <tr>
+                                                    <th>Категорія</th>
+                                                    <th>Фірма</th>
+                                                    <th>Найменування</th>
+                                                    <th>Опис</th>
+                                                    <th>Код</th>                                                    
+                                                    <th>Кількість</th>
+                                                    <th style="text-align:center">Од.Вим.</th>
+                                                    <th>Ціна</th>
+                                                    <th></th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+
+                                                @foreach (var item in Model.ProductToInvoices)
+                                                {
+                                                    <tr>
+                                                        <td>@item.Product.Category.Name</td>
+                                                        <td>@item.Product.Manufacturer.Name</td>
+                                                        <td>@item.Product.Name</td>
+                                                        <td>@item.Product.Description</td>
+                                                        <td>@item.Product.Barcode</td>                                                        
+                                                        <td><input type="text" id="Amount_@item.Product.Id" name="Amount_@item.Product.Id" value="@item.Amount" class="form-control border-input" /></td>
+                                                        <td style="text-align:center">@item.Product.Unit.Name</td>
+                                                        <td><input type="text" id="Price_@item.Product.Id" name="Price_@item.Product.Id" value="@item.Price" class="form-control border-input" /></td>
+                                                        @*<td><button type="submit" class="btn btn-info btn-fill btn-wd">Додати</button></td>*@
+                                                        <td>
+                                                            <input type="hidden" id="Invoice_@item.Product.Id" value="@item.InvoiceId" />
+                                                            <a class="btn btn-sm btn-success" id="btn_@item.Product.Id" onClick="insertData(@item.Product.Id);">
+                                                                <i class="ti-plus"></i>
+                                                            </a>
+                                                            <a class="btn btn-sm btn-danger" id="btnDelete_@item.Product.Id" onClick="deleteData(@item.Product.Id);">
+                                                                <i class="ti-trash"></i>
+                                                            </a>
+
+                                                            @*<input id="btn_@item.Product.Id" onClick="insertData(@item.Product.Id);" type="button" value="Submit" />
+
+                                                    onclick="javascript:return confirm('Видалити?');">
+                                                    *@
+                                                        </td>
+                                                    </tr>
+                                                }
+
+                                            </tbody>
+                                        </table>
+                                    </div>
+
+                                }
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+<script type="text/javascript">
+    function insertData(productId) {
+        var Amount = document.getElementById('Amount_' + productId).value;
+        var Price = document.getElementById('Price_' + productId).value;
+        var InvoiceId = document.getElementById('Invoice_' + productId).value;
+        var ProductId = productId;
+
+        $.ajax({
+            url: "/Invoice/AddProduct",
+            data:
+            {
+                'InvoiceId': InvoiceId,
+                'ProductId': ProductId,
+                'Amount': Amount,
+                'Price': Price
+            },
+            type: "post",
+            cache: false,
+            success: function (result) {
+                document.getElementById('invoiceSum').textContent = result;
+                //alert('Товар додано!');
+                demo.showNotification('top', 'center', 'Товар додано!', 'success');
+                //$("#hdnOrigComments").val($('#txtComments').val());
+                //$('#lblCommentsNotification').text(savingStatus);
+            },
+            error: function (xhr, ajaxOptions, thrownError) {
+                demo.showNotification('top', 'center', 'Введіть значення!', 'warning');
+                //$('#lblCommentsNotification').text("Error encountered while saving the comments.");
+            }
+        });
+
+    };
+
+    function deleteData(productId) {
+        //alert("Видалення");
+
+        var Amount = document.getElementById('Amount_' + productId).value;
+        var Price = document.getElementById('Price_' + productId).value;
+        var InvoiceId = document.getElementById('Invoice_' + productId).value;
+        var ProductId = productId;
+
+        $.ajax({
+            url: "/Invoice/DeleteProduct",
+            data:
+            {
+                'InvoiceId': InvoiceId,
+                'ProductId': ProductId,
+                'Amount': Amount,
+                'Price': Price
+            },
+            type: "post",
+            cache: false,
+            success: function (result) {
+                document.getElementById('Amount_' + productId).value = null;
+                document.getElementById('Price_' + productId).value = null;
+                document.getElementById('invoiceSum').textContent = result;
+                demo.showNotification('top', 'center', 'Товар видалено!', 'success');
+            },
+            error: function (xhr, ajaxOptions, thrownError) {
+                demo.showNotification('top', 'center', 'Нема даних для видалення!', 'warning');
+
+                //$('#lblCommentsNotification').text("Error encountered while saving the comments.");
+            }
+        });
+
+    };
+
+
+</script>

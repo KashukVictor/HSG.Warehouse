@@ -1,0 +1,86 @@
+﻿@model ClientsListViewModel
+
+<div class="card">
+    @*Хлібні крошки*@
+    @*    <div>
+    @{
+    await Html.RenderPartialAsync("_NavMenu", Model.seededCategories);
+    }
+    </div>*@
+    <div class="content">
+        @if (TempData["Error"] != null)
+        {
+            <div class="col-md-12 alert alert-danger">
+                <span><b>Помилка!</b> - @TempData["Error"] </span>
+            </div>
+        }
+        <div class="row">
+            <div>
+
+                <div class="col-md-12">
+                    <div class="form-group">
+
+                        <a class="btn btn-info btn-fill btn-wd" asp-controller="Options" asp-action="Client">
+                            Додати нового клієнта
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="container-fluid">
+            <div class="row">
+                <div>
+                    <div class="card">
+                        <div class="content">
+                            @if (Model.Clients == null)
+                            {
+                                <div class="text-center">
+                                    <div class="card-body">
+                                        <h4 class="card-title">Клієнти відсутні</h4>
+                                    </div>
+                                </div>
+                            }
+                            else
+                            {
+                                <div class="content table-responsive table-full-width">
+                                    <table class="table table-striped  text-left">
+                                        <thead>
+                                            <tr>
+                                                <th>Прізвище</th>
+                                                <th>Ім'я</th>
+                                                <th>По батькові</th>
+                                                <th>Телефон</th>
+                                                <th>Адреса</th>
+                                                <th></th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @foreach (var item in Model.Clients)
+                                            {
+                                                <tr>
+                                                    <td>@item.LastName</td>
+                                                    <td>@item.FirstName</td>
+                                                    <td>@item.MiddleName</td>
+                                                    <td>@item.Phone</td>
+                                                    <td>@item.Address</td>
+                                                    <td>
+                                                        <a class="btn btn-sm btn-warning" asp-controller="Options" asp-action="Client" asp-route-clientId="@item.Id">
+                                                            <i class="ti-pencil"></i>
+                                                        </a>
+                                                        <a class="btn btn-sm btn-danger" asp-controller="Options" asp-action="DeleteClient" asp-route-clientId="@item.Id" onclick="javascript:return confirm('Видалити?');">
+                                                            <i class="ti-trash"></i>
+                                                        </a>
+                                                    </td>
+                                                </tr>
+                                            }
+                                        </tbody>
+                                    </table>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

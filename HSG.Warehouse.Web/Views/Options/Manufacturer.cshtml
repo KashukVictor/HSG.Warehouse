@@ -1,0 +1,99 @@
+﻿@model ManufacturerViewModel
+
+<div class="col text-center">
+    <div class="card">
+        <div class="header">
+            <h4 class="title">Виробники / Бренди</h4>
+        </div>
+        <div class="content">
+
+            @if (Model.Manufacturers == null)
+            {
+                <div class="text-center">
+                    <div class="card-body">
+                        <h4 class="card-title">Виробники відсутні</h4>
+                    </div>
+                </div>
+            }
+            else
+            {
+                <div class="content table-responsive table-full-width">
+                    <table class="table table-striped  text-left">
+                        <tbody>
+                            @foreach (var item in Model.Manufacturers)
+                            {
+                                <tr>
+                                    <td>@item.Name</td>
+                                    <td>
+                                        <a class="btn btn-sm btn-warning" asp-controller="Options" asp-action="Manufacturer" asp-route-manufacturerId="@item.Id">
+                                            <i class="ti-pencil"></i>
+                                        </a>
+                                        <a class="btn btn-sm btn-danger" asp-controller="Options" asp-action="DeleteManufacturer" asp-route-manufacturerId="@item.Id" onclick="javascript:return confirm('Видалити?');">
+                                            <i class="ti-trash"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            }
+            @*<hr>*@
+        </div>
+    </div>
+    <div class="card">
+        <div class="content">
+            @if (TempData["Error"] != null)
+            {
+                <div class="col-md-12 alert alert-danger">
+                    <span><b>Помилка!</b> - @TempData["Error"] </span>
+                </div>
+            }
+
+            @if (Model.Manufacturer == null || Model.Manufacturer.Id == 0)
+            {
+                @*Додати нову*@
+                <form method="post" asp-action="AddManufacturer" enctype="multipart/form-data">
+
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="form-group text-left">
+                                <label asp-for="Manufacturer.Name">Назва</label>
+                                <input asp-for="Manufacturer.Name" class="form-control border-input" placeholder="Наприклад SkTeK" required>
+                                <span asp-validation-for="Manufacturer.Name" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="text-center">
+                        <button type="submit" class="btn btn-info btn-fill btn-wd">Додати</button>
+                    </div>
+                    <div class="clearfix"></div>
+                </form>
+            }
+            else
+            {
+                @*Редагування*@
+                <form method="post" asp-action="EditManufacturer" enctype="multipart/form-data">
+                    <input type="hidden" asp-for="Manufacturer.Id" />
+
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="form-group text-left">
+                                <label asp-for="Manufacturer.Name">Назва</label>
+                                <input asp-for="Manufacturer.Name" class="form-control border-input" placeholder="Наприклад SkTeK" required>
+                                <span asp-validation-for="Manufacturer.Name" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="text-center">
+                        <button type="submit" class="btn btn-info btn-fill btn-wd">Зберегти</button>
+                    </div>
+                    <div class="clearfix"></div>
+                </form>
+            }
+        </div>
+    </div>
+
+</div>

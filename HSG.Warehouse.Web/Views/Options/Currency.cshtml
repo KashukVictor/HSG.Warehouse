@@ -1,0 +1,78 @@
+﻿@model CurrencyViewModel
+
+<div class="col text-center">
+    <div class="card">
+        @if (TempData["Error"] != null)
+        {
+            <div class="col-md-12 alert alert-danger">
+                <span><b>Помилка!</b> - @TempData["Error"] </span>
+            </div>
+        }
+        <div class="header">
+            <h3 class="title">Валюти</h3>
+        </div>
+        <div class="content">
+
+            @if (Model.Currency == null)
+            {
+                <div class="text-center">
+                    <div class="card-body">
+                        <h4 class="card-title">Валюти відсутні</h4>
+                    </div>
+                </div>
+            }
+            else
+            {
+                <div class="content table-responsive table-full-width">
+                    <table class="table table-striped  text-left">
+                        <tbody>
+                            @foreach (var item in Model.Currency)
+                            {
+                                <tr>
+                                    <td>@item.Code</td>
+                                    <td>@item.ShortName</td>
+                                    <td>@item.Name</td>
+                                    <td>
+                                        <a class="btn btn-sm btn-danger" asp-controller="Options" asp-action="DeleteCurrency" asp-route-currencyId="@item.Id" onclick="javascript:return confirm('Видалити?');">
+                                            <i class="ti-trash"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+
+            }
+            @*<hr>*@
+        </div>
+    </div>
+    <div class="card">
+        <div class="header">
+            <h3 class="title">Доступні валюти</h3>
+        </div>
+        <div class="content table-responsive table-full-width">
+            @*<form method="get" asp-action="AddCurrency" enctype="multipart/form-data">*@
+            <table class="table table-striped  text-left">
+                <tbody>
+                    @foreach (var item in Model.CurrencyNBU)
+                    {
+                        <tr>
+                            <td>@item.Code</td>
+                            <td>@item.ShortName</td>
+                            <td>@item.Name</td>
+                            <td>
+
+                                <a class="btn btn-sm btn-info" asp-controller="Options" asp-action="AddCurrency" asp-route-currencyId="@item.Code" onclick="javascript:return confirm('Додати вибрану валюту?');">
+                                    <i class="ti-plus"></i>
+                                </a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+            @*</form>*@
+        </div>
+    </div>
+
+</div>

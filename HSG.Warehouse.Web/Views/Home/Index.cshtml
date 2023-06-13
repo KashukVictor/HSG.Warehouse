@@ -1,0 +1,92 @@
+﻿@model ReportViewModel
+
+@{
+    ViewData["Title"] = "Home Page";
+}
+
+<div class="row">
+    <div class="col-lg-6 col-sm-6">
+        <div class="card">
+            <div class="content">
+                <canvas id="chartSaleSum"></canvas>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-6 col-sm-6">
+        <div class="card">
+            <div class="content">
+                <canvas id="chartSaleCount"></canvas>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+    const ctx = document.getElementById('chartSaleSum');
+    const ctx2 = document.getElementById('chartSaleCount');
+
+    new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: [@ViewBag.Month],
+            datasets: [{
+                label: 'Сума продажів по місяцям (грн)',
+                backgroundColor: 'rgba(255, 48, 0, 0.5)',
+                data: [@ViewBag.SaleSum],
+                borderWidth: 1
+            }]
+        },
+        options: {
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+
+    new Chart(ctx2, {
+        type: 'bar',
+        data: {
+            labels: [@ViewBag.Month],
+            datasets: [{
+                label: 'Кількість продажів по місяцям',
+                data: [@ViewBag.SaleCount],
+                borderWidth: 1
+            }]
+        },
+        options: {
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+</script>
+@*
+
+    <script>
+    const ctx = document.getElementById('myChart');
+
+    new Chart(ctx, {
+    type: 'bar',
+    data: {
+    labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
+    datasets: [{
+    label: '# of Votes',
+    data: [12, 19, 3, 5, 2, 3],
+    borderWidth: 1
+    }]
+    },
+    options: {
+    scales: {
+    y: {
+    beginAtZero: true
+    }
+    }
+    }
+    });
+    </script>*@

@@ -1,0 +1,60 @@
+html {
+    font-size: 14px;
+}
+
+@media (min-width: 768px) {
+    html {
+        font-size: 16px;
+    }
+}
+
+html {
+    position: relative;
+    min-height: 100%;
+}
+
+body {
+    margin-bottom: 60px;
+}
+
+
+
+/*Каталог товарів (TreeView)*/
+
+ul, #TreeView {
+    list-style-type: none;
+}
+
+#TreeView {
+    margin: 0;
+    padding: 0;
+}
+
+.TreeViewCaret {
+    cursor: pointer;
+    -webkit-user-select: none; /* Safari 3.1+ */
+    -moz-user-select: none; /* Firefox 2+ */
+    -ms-user-select: none; /* IE 10+ */
+    user-select: none;
+}
+
+    .TreeViewCaret::before {
+        content: "\25B6";
+        color: black;
+        display: inline-block;
+        margin-right: 6px;
+    }
+
+.TreeViewCaret-down::before {
+    -ms-transform: rotate(90deg); /* IE 9 */
+    -webkit-transform: rotate(90deg); /* Safari */
+    ' transform: rotate(90deg);
+}
+
+.TreeViewNested {
+    display: none;
+}
+
+.TreeViewActive {
+    display: block;
+}

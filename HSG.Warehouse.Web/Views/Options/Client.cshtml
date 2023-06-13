@@ -1,0 +1,126 @@
+﻿@model Client
+
+<div class="col text-center">
+    <div class="card">
+        <div class="content">
+            @if (TempData["Error"] != null)
+            {
+                <div class="col-md-12 alert alert-danger">
+                    <span><b>Помилка!</b> - @TempData["Error"] </span>
+                </div>
+            }
+
+            @if (Model == null || Model.Id == 0)
+            {
+                @*Додати нову*@
+                <form method="post" asp-action="AddClient" enctype="multipart/form-data">
+                    <div class="col-md-12">
+                        <div class="header">
+                            <h4 class="title">Продукція</h4>
+                        </div>
+                        <div class="content">
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label>Прізвище</label>
+                                        <input type="text" asp-for="LastName" class="form-control border-input" placeholder="Гупало">
+                                        <span asp-validation-for="LastName" class="text-danger"></span>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label>Ім'я</label>
+                                        <input type="text" asp-for="FirstName" class="form-control border-input" placeholder="Василь">
+                                        <span asp-validation-for="FirstName" class="text-danger"></span>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label>По батькові</label>
+                                        <input type="text" asp-for="MiddleName" class="form-control border-input" placeholder="">
+                                        <span asp-validation-for="MiddleName" class="text-danger"></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-3">
+                                    <label>Телефон</label>
+                                    <input type="text" asp-for="Phone" class="form-control border-input" placeholder="+38000000000">
+                                    <span asp-validation-for="Phone" class="text-danger"></span>
+
+                                </div>
+                                <div class="col-md-9">
+                                    <label>Адреса</label>
+                                    <input type="text" asp-for="Address" class="form-control border-input" placeholder="">
+                                    <span asp-validation-for="Address" class="text-danger"></span>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="text-center">
+                        <button type="submit" class="btn btn-info btn-fill btn-wd">Додати</button>
+                    </div>
+                    <div class="clearfix"></div>
+                </form>
+            }
+            else
+            {
+                @*Редагування*@
+                <form method="post" asp-action="EditClient" enctype="multipart/form-data">
+                    <input type="hidden" id="Id" name="Id" asp-for="Id" />
+                    <div class="col-md-12">
+                        <div class="header">
+                            <h4 class="title">Продукція</h4>
+                        </div>
+                        <div class="content">
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label>Прізвище</label>
+                                        <input type="text" asp-for="LastName" class="form-control border-input" placeholder="Гупало">
+                                        <span asp-validation-for="LastName" class="text-danger"></span>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label>Ім'я</label>
+                                        <input type="text" asp-for="FirstName" class="form-control border-input" placeholder="Василь">
+                                        <span asp-validation-for="FirstName" class="text-danger"></span>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label>По батькові</label>
+                                        <input type="text" asp-for="MiddleName" class="form-control border-input" placeholder="">
+                                        <span asp-validation-for="MiddleName" class="text-danger"></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-3">
+                                    <label>Телефон</label>
+                                    <input type="text" asp-for="Phone" class="form-control border-input" placeholder="+38000000000">
+                                    <span asp-validation-for="Phone" class="text-danger"></span>
+
+                                </div>
+                                <div class="col-md-9">
+                                    <label>Адреса</label>
+                                    <input type="text" asp-for="Address" class="form-control border-input" placeholder="">
+                                    <span asp-validation-for="Address" class="text-danger"></span>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="text-center">
+                        <button type="submit" class="btn btn-info btn-fill btn-wd">Зберегти</button>
+                    </div>
+                    <div class="clearfix"></div>
+                </form>
+            }
+        </div>
+    </div>
+</div>

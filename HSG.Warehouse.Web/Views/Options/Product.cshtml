@@ -1,0 +1,223 @@
+﻿@model ProductViewModel
+
+<div class="col text-center">
+    <div class="card">
+        <div class="content">
+            @if (TempData["Error"] != null)
+            {
+                <div class="col-md-12 alert alert-danger">
+                    <span><b>Помилка!</b> - @TempData["Error"] </span>
+                </div>
+            }
+
+            @if (Model.Product == null || Model.Product.Id == 0)
+            {
+                @*Додати нову*@
+                <form method="post" asp-action="Product" enctype="multipart/form-data">
+                    <div class="col-md-12">
+                        <div class="header">
+                            <h4 class="title">Продукція</h4>
+                        </div>
+                        <div class="content">
+                            <div class="row">
+                                <div class="col-md-2">
+                                    <div class="form-group">
+                                        <label>Категорія</label>
+                                        <select id="SelectCatetegoryId" asp-for="Product.CategoryId" class="form-control border-input">
+                                            @foreach (var category in Model.Categories)
+                                            {
+                                                <option value=@category.Id>@category.Name</option>
+                                            }
+                                        </select>
+                                        <span asp-validation-for="Product.CategoryId" class="text-danger"></span>
+                                    </div>
+                                </div>
+                                <div class="col-md-2">
+                                    <div class="form-group">
+                                        <label>Виробник</label>
+                                        <select id="SelectManufacturerId" asp-for="Product.ManufacturerId" class="form-control border-input">
+                                            @foreach (var manufacturer in Model.Manufacturers)
+                                            {
+                                                <option value=@manufacturer.Id>@manufacturer.Name</option>
+                                            }
+                                        </select>
+                                        <span asp-validation-for="Product.ManufacturerId" class="text-danger"></span>
+
+                                    </div>
+                                </div>
+                                <div class="col-md-7">
+                                    <div class="form-group">
+                                        <label>Найменування</label>
+                                        <input type="text" asp-for="Product.Name" class="form-control border-input" placeholder="Найменування">
+                                        <span asp-validation-for="Product.Name" class="text-danger"></span>
+                                    </div>
+                                </div>
+                                <div class="col-md-1">
+                                    <div class="form-group">
+                                        <label>Одиниці виміру</label>
+                                        <select id="SelectUnitId" asp-for="Product.UnitId" class="form-control border-input">
+                                            @foreach (var unit in Model.Units)
+                                            {
+                                                <option value=@unit.Id>@unit.Name</option>
+                                            }
+                                        </select>
+                                        <span asp-validation-for="Product.UnitId" class="text-danger"></span>
+
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-2">
+                                    <label>Штрих код</label>
+                                    <div class="form-group">
+                                        <input id="BarCode" type="text" asp-for="Product.Barcode" disabled="disabled" class="form-control border-input" placeholder="штрих код">
+                                    </div>
+                                </div>
+                                <div class="col-md-1">
+                                    <label>Автоматично</label>
+                                    <div class="form-group">
+                                        <input type="checkbox" asp-for="IsAutoBarcode" onchange="document.getElementById('BarCode').disabled = this.checked;" class="form-control border-input" title="Згенерувати штрих код автоматично" checked="checked">
+                                    </div>
+                                </div>
+
+                                <div class="col-md-7">
+                                    <div class="form-group">
+                                        <label>Додатковий опис</label>
+                                        <input type="text" asp-for="Product.Description" class="form-control border-input" placeholder="Детальний опис">
+                                    </div>
+                                </div>
+                                <div class="col-md-1">
+                                    <div class="form-group">
+                                        <label>Ціна</label>
+                                        <input type="text" asp-for="Product.Price" class="form-control border-input" placeholder="150">
+                                        <span asp-validation-for="Product.Price" class="text-danger"></span>
+                                    </div>
+                                </div>
+                                <div class="col-md-1">
+                                    <div class="form-group">
+                                        <label>Запас на складі</label>
+                                        <input type="number" asp-for="Product.MinimunStock" class="form-control border-input" placeholder="5" value="1">
+                                        <span asp-validation-for="Product.MinimunStock" class="text-danger"></span>
+                                    </div>
+                                </div>
+                            </div>
+
+
+                        </div>
+
+                    </div>
+
+                    <div class="text-center">
+                        <button type="submit" class="btn btn-info btn-fill btn-wd">Додати</button>
+                    </div>
+                    <div class="clearfix"></div>
+                </form>
+            }
+            else
+            {
+                @*Редагування*@
+                <form method="post" asp-action="Product" enctype="multipart/form-data">
+                    <input type="hidden" asp-for="Product.Id" />
+                    <div class="col-md-12">
+                        <div class="header">
+                            <h4 class="title">Продукція</h4>
+                        </div>
+                        <div class="content">
+                            <div class="row">
+                                <div class="col-md-2">
+                                    <div class="form-group">
+                                        <label>Категорія</label>
+                                        <select id="SelectCatetegoryId" asp-for="Product.CategoryId" class="form-control border-input">
+                                            @foreach (var category in Model.Categories)
+                                            {
+                                                <option value=@category.Id>@category.Name</option>
+                                            }
+                                        </select>
+                                        <span asp-validation-for="Product.CategoryId" class="text-danger"></span>
+                                    </div>
+                                </div>
+                                <div class="col-md-2">
+                                    <div class="form-group">
+                                        <label>Виробник</label>
+                                        <select id="SelectManufacturerId" asp-for="Product.ManufacturerId"  class="form-control border-input">
+                                            @foreach (var manufacturer in Model.Manufacturers)
+                                            {
+                                                <option value=@manufacturer.Id>@manufacturer.Name</option>
+                                            }
+                                        </select>
+                                        <span asp-validation-for="Product.ManufacturerId" class="text-danger"></span>
+                                    </div>
+                                </div>
+                                <div class="col-md-7">
+                                    <div class="form-group">
+                                        <label>Найменування</label>
+                                        <input type="text" asp-for="Product.Name" class="form-control border-input" placeholder="Найменування">
+                                        <span asp-validation-for="Product.Name" class="text-danger"></span>
+                                    </div>
+                                </div>
+                                <div class="col-md-1">
+                                    <div class="form-group">
+                                        <label>Одиниці виміру</label>
+                                        <select id="SelectUnitId" asp-for="Product.UnitId"  class="form-control border-input">
+                                            @foreach (var unit in Model.Units)
+                                            {
+                                                <option value=@unit.Id>@unit.Name</option>
+                                            }
+                                        </select>
+                                        <span asp-validation-for="Product.UnitId" class="text-danger"></span>
+
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-2">
+                                    <label>Штрих код</label>
+                                    <div class="form-group">
+                                        <input id="BarCode" type="text" asp-for="Product.Barcode" class="form-control border-input" placeholder="штрих код">
+                                    </div>
+                                </div>
+@*                                <div class="col-md-1">
+                                    <label>Автоматично</label>
+                                    <div class="form-group">
+                                        <input type="checkbox" asp-for="IsAutoBarcode" onchange="document.getElementById('BarCode').disabled = this.checked;" class="form-control border-input" title="Згенерувати штрих код автоматично" checked="checked">
+                                    </div>
+                                </div>
+*@
+                                <div class="col-md-8">
+                                    <div class="form-group">
+                                        <label>Додатковий опис</label>
+                                        <input type="text" asp-for="Product.Description" class="form-control border-input" placeholder="Детальний опис">
+                                    </div>
+                                </div>
+                                <div class="col-md-1">
+                                    <div class="form-group">
+                                        <label>Ціна</label>
+                                        <input type="text" asp-for="Product.Price" class="form-control border-input" placeholder="150">
+                                        <span asp-validation-for="Product.Price" class="text-danger"></span>
+                                    </div>
+                                </div>
+                                <div class="col-md-1">
+                                    <div class="form-group">
+                                        <label>Запас на складі</label>
+                                        <input type="number" asp-for="Product.MinimunStock" class="form-control border-input" placeholder="5" value="1">
+                                        <span asp-validation-for="Product.MinimunStock" class="text-danger"></span>
+                                    </div>
+                                </div>
+                            </div>
+
+
+                        </div>
+
+                    </div>
+
+                    <div class="text-center">
+                        <button type="submit" class="btn btn-info btn-fill btn-wd">Зберегти</button>
+                    </div>
+                    <div class="clearfix"></div>
+                </form>
+            }
+        </div>
+    </div>
+</div>

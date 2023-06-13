@@ -1,0 +1,242 @@
+﻿@model WarehouseViewModel
+
+<form method="post" asp-action="Save" enctype="multipart/form-data">
+    <input type="hidden" asp-for="Sale.Id" />
+
+    <div class="card">
+        <div class="content">
+            @if (TempData["Error"] != null)
+            {
+                <div class="col-md-12 alert alert-danger">
+                    <span><b>Помилка!</b> - @TempData["Error"] </span>
+                </div>
+            }
+            <div class="row">
+                <div>
+                    <div class="col-md-2">
+                        <div class="form-group">
+                            <label>Фільтр по категорії</label>
+                            @{
+                                await Html.RenderPartialAsync("_CategoryDropDownList", Model.CategoryMenu);
+                            }
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="form-group">
+                            <label>&nbsp;</label>
+                            <br />
+                            <div class="text-center">
+                                <button asp-controller="Sale" asp-action="View" asp-route-saleId="@Model.Sale.Id" class="btn btn-info btn-fill btn-wd">Перегляд накладної</button>
+                            </div>
+                            <div class="clearfix"></div>
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="form-group">
+                            <label>Накладна</label>
+                            <br />
+                            <div>
+                                № @Model.Sale.Number від @Model.Sale.Date.ToString("d")
+                            </div>
+                            <div class="clearfix"></div>
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="form-group">
+                            <label>Постачальник</label>
+                            <br />
+                            <div>
+                                @Model.Sale.Client.LastName @Model.Sale.Client.FirstName
+                            </div>
+                            <div class="clearfix"></div>
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="form-group">
+                            <label>Сума</label>
+                            <br />
+                            <div>
+                                <span id="saleSum">@Model.Sum</span> @Model.Sale.Currency.ShortName
+                            </div>
+                            <div class="clearfix"></div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+            <div class="container-fluid">
+                <div class="row">
+                    <div>
+
+                        <div class="card">
+                            <div class="content">
+
+                                @if (Model.Warehouse == null)
+                                {
+                                    <div class="text-center">
+                                        <div class="card-body">
+                                            <h4 class="card-title">Продукція відсутня</h4>
+                                        </div>
+                                    </div>
+                                }
+                                else
+                                {
+                                    <div class="content table-responsive table-full-width">
+                                        <table class="table table-striped  text-left">
+                                            <thead>
+                                                <tr>
+                                                    <th>Категорія</th>
+                                                    <th>Фірма</th>
+                                                    <th>Найменування</th>
+                                                    <th>Опис</th>
+                                                    <th>Код</th>
+                                                    <th>Доступно</th>
+                                                    <th>На продаж</th>
+                                                    <th>Залишок</th>
+                                                    <th>Од.Вим.</th>
+                                                    <th>Ціна</th>
+                                                    <th></th>
+                                                    <th></th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+
+                                                @foreach (var item in Model.ProductToSales)
+                                                {
+                                                    <tr>
+                                                        <td>@item.Warehouse.Product.Category.Name</td>
+                                                        <td>@item.Warehouse.Product.Manufacturer.Name</td>
+                                                        <td>@item.Warehouse.Product.Name</td>
+                                                        <td>@item.Warehouse.Product.Description</td>
+                                                        <td>@item.Warehouse.Product.Barcode</td>
+                                                        <td>
+                                                            <span id="amountInWarehouse_@item.Warehouse.Id">
+                                                                @item.Warehouse.Amount
+                                                            </span>
+                                                        </td>
+                                                        <td>
+                                                            <input type="text" id="Amount_@item.Warehouse.Id" name="Amount_@item.Warehouse.Id" value="@item.Amount" class="form-control border-input" style="width:100px" />
+                                                        </td>
+                                                        <td>
+
+                                                            <span id="amountRest_@item.Warehouse.Id">
+                                                                @(item.Warehouse.Amount - item.Amount)
+                                                            </span>
+
+                                                        </td>
+                                                        <td>
+                                                            @item.Warehouse.Product.Unit.Name
+                                                            <input type="hidden" id="Product_@item.Warehouse.Id" name="Product_@item.Warehouse.Id" value="@item.Warehouse.Product.Id">
+                                                        </td>
+                                                        <td>
+                                                            <input type="hidden" id="Sale_@item.Warehouse.Id" value="@item.SaleId" />
+                                                            @{
+                                                                if (item.Price > 0)
+                                                                {
+                                                                    <input type="text" id="Price_@item.Warehouse.Id" name="Price_@item.Warehouse.Id" value="@item.Price" class="form-control border-input" style="width:100px" />
+                                                                }
+                                                                else
+                                                                {
+                                                                    <input type="text" id="Price_@item.Warehouse.Id" name="Price_@item.Warehouse.Id" value="@item.Warehouse.Product.Price" class="form-control border-input" style="width:100px" />
+                                                                }
+                                                            }
+
+                                                        </td>
+                                                        <td>
+                                                            @item.Warehouse.InvoiceDetail.Invoice.Currency.ShortName
+                                                            <input type="hidden" id="Id_@item.Warehouse.Id" value="@item.Warehouse.InvoiceDetail.Id" />
+                                                        </td>
+                                                        <td>
+                                                            <a class="btn btn-sm btn-success" id="btn_@item.Warehouse.Id" onClick="insertData(@item.Warehouse.Id);">
+                                                                <i class="ti-plus"></i>
+                                                            </a>
+                                                            <input type="hidden" id="saleDetailId_@item.Warehouse?.Id" value="@item.SaleDetailId" />
+                                                            <a class="btn btn-sm btn-danger" id="btnDelete_@item.Warehouse.Id" onClick="deleteData(@item.Warehouse.Id);">
+                                                                <i class="ti-trash"></i>
+                                                            </a>
+                                                        </td>
+                                                    </tr>
+                                                }
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+<script type="text/javascript">
+    function insertData(warehouseId) {
+        var SaleId = document.getElementById('Sale_' + warehouseId).value;
+        var Amount = document.getElementById('Amount_' + warehouseId).value;
+        var AmountInWarehouse = document.getElementById('amountInWarehouse_' + warehouseId).textContent;
+        var Price = document.getElementById('Price_' + warehouseId).value;
+        var ProductId = document.getElementById('Product_' + warehouseId).value;
+        var InvoiceDetailId = document.getElementById('Id_' + warehouseId).value;
+
+        $.ajax({
+            url: "/Sale/AddProduct",
+            data:
+            {
+                'SaleId': SaleId,
+                'ProductId': ProductId,
+                'InvoiceDetailId': InvoiceDetailId,
+                'Amount': Amount,
+                'Price': Price
+            },
+            type: "post",
+            cache: false,
+            success: function (result) {
+                document.getElementById('saleSum').textContent = result;
+                document.getElementById('amountRest_' + warehouseId).textContent = (AmountInWarehouse - Amount);
+                demo.showNotification('top', 'center', 'Товар додано!', 'success');
+
+                //$("#hdnOrigComments").val($('#txtComments').val());
+                //$('#lblCommentsNotification').text(savingStatus);
+            },
+            error: function (xhr, ajaxOptions, thrownError) {
+                demo.showNotification('top', 'center', 'Введіть значення!', 'warning');
+                //$('#lblCommentsNotification').text("Error encountered while saving the comments.");
+            }
+        });
+
+    };
+
+    function deleteData(warehouseId) {
+        //alert("Видалення");
+        var AmountInWarehouse = document.getElementById('amountInWarehouse_' + warehouseId).textContent;
+        var SaleDetailId = document.getElementById('saleDetailId_' + warehouseId).value;
+        var WarehouseId = warehouseId;
+
+        $.ajax({
+            url: "/Sale/DeleteProduct",
+            data:
+            {
+                'SaleDetailId': SaleDetailId,
+                'SaleId': @Model.Sale.Id,
+            },
+            type: "post",
+            cache: false,
+            success: function (result) {
+                document.getElementById('Amount_' + WarehouseId).value = null;
+                document.getElementById('saleSum').textContent = result;
+                document.getElementById('amountRest_' + warehouseId).textContent = null;
+
+                demo.showNotification('top', 'center', 'Товар видалено!', 'success');
+            },
+            error: function (xhr, ajaxOptions, thrownError) {
+                demo.showNotification('top', 'center', 'Нема даних для видалення!', 'warning');
+
+                //$('#lblCommentsNotification').text("Error encountered while saving the comments.");
+            }
+        });
+
+    };
+
+
+</script>

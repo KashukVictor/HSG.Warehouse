@@ -1,0 +1,37 @@
+﻿@model CategoryMenu
+@*@model SeededCategories*@
+
+
+@if (Model.Categories.OrderBy(c => c.Name).Any())
+{
+    var controller = @ViewContext.RouteData.Values["controller"];
+    var action = @ViewContext.RouteData.Values["action"];
+
+    <select id="SelectCatetegoryId" name="CatetegoryId" class="form-control border-input">
+        <option value=0>Всі категорії</option>
+
+        @foreach (var category in Model.Categories)
+        {
+            if (category.Id == Model.SelectedId)
+            {
+                <option value=@category.Id selected>@category.Name</option>
+            }
+            else
+            {
+                <option value=@category.Id>@category.Name</option>
+            }
+        }
+    </select>
+    <script>
+        let select = document.getElementById('SelectCatetegoryId');
+        select.addEventListener('change', function () {
+            let url = '/@controller/@action?CategoryId=' + select.value + "@Model.QueryString";
+            url = url.replace(/&amp;/g, "&");            
+            location = url;
+        });
+    </script>
+
+}
+
+
+

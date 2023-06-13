@@ -1,0 +1,96 @@
+﻿@model SalesListViewModel
+
+<div class="card">
+    <div class="content">
+        @if (TempData["Error"] != null)
+        {
+            <div class="col-md-12 alert alert-danger">
+                <span><b>Помилка!</b> - @TempData["Error"] </span>
+            </div>
+        }
+        <div class="row">
+            <div>
+                <div class="col-md-12">
+                    <div class="form-group">
+                        <a class="btn btn-info btn-fill btn-wd" asp-controller="Sale" asp-action="Create">
+                            Створити накладу
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="container-fluid">
+            <div class="row">
+                <div>
+                    <div class="card">
+                        <div class="content">
+                            @if (Model == null)
+                            {
+                                <div class="text-center">
+                                    <div class="card-body">
+                                        <h4 class="card-title">Інвойси відсутні</h4>
+                                    </div>
+                                </div>
+                            }
+                            else
+                            {
+                                <div class="content table-responsive table-full-width">
+                                    <table class="table table-striped  text-left">
+                                        <thead>
+                                            <tr>
+                                                <th>№</th>
+                                                <th>Від</th>
+                                                <th>Клієнт</th>
+                                                <th>Валюта</th>
+                                                <th>Опис</th>
+                                                <th></th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @foreach (var item in Model.Sales)
+                                            {
+                                                <tr>
+                                                    <td>
+                                                        <a asp-controller="Sale" asp-action="View" asp-route-saleId="@item.Id">
+                                                            @item.Number
+                                                        </a>
+                                                    </td>
+                                                    <td>@item.Date.ToString("d")</td>
+                                                    <td>@item.Client.LastName @item.Client.FirstName </td>
+                                                    <td>@item.Currency.Name</td>
+                                                    <td>@item.Description</td>
+                                                    <td>
+                                                        @if (!item.Fixed)
+                                                        {
+                                                            <a class="btn btn-sm btn-warning" asp-controller="Sale" asp-action="Edit" asp-route-saleId="@item.Id">
+                                                                <i class="ti-pencil"></i>
+                                                            </a>
+                                                            <a class="btn btn-sm btn-danger" asp-controller="Sale" asp-action="Delete" asp-route-saleId="@item.Id" onclick="javascript:return confirm('Видалити?');">
+                                                                <i class="ti-trash"></i>
+                                                            </a>
+
+                                                            <a class="btn btn-sm btn-success" asp-controller="Sale" asp-action="AddProduct" asp-route-categoryId="0" asp-route-SaleId="@item.Id">
+                                                                <i class="ti-import"></i>
+                                                            </a>
+                                                        }
+                                                        else
+                                                        {
+                                                            <a class="btn btn-sm btn-info" asp-controller="Sale" asp-action="View" asp-route-saleId="@item.Id">
+                                                                <i class="ti-eye"></i>
+                                                            </a>
+
+                                                        }
+                                                    </td>
+                                                </tr>
+                                            }
+                                        </tbody>
+                                    </table>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
